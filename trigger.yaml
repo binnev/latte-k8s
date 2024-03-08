@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: trigger-deployment 
+  labels: 
+    app: trigger
+spec: 
+  replicas: 2 
+  selector: 
+    matchLabels: 
+      app: trigger
+  template: 
+    metadata: 
+      labels: 
+        app: trigger
+    spec: 
+      containers: 
+      - name: trigger
+        # This is the one I build locally using `docker build ...`. 
+        # TODO: point this at our image registry (once the latte 
+        # images are being built and pushed there)
+        image: latte-trigger  
+
+---
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: trigger-service 
+spec: 
+  selector: 
+    app: trigger
+  ports: 
+    - port: 9999
+      targetPort: 9999
