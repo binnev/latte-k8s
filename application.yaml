@@ -1,0 +1,35 @@
+# This is the argoCD config file 
+
+# for custom components, the api version is in the project itself (the argoCD project, that is)
+apiVersion: argoproj.io/v1alpha1 # we might need to update this version
+kind: Application 
+metadata: 
+  name: latte-argo 
+  # this app will be created in the same namespace as where ArgoCD is running
+  namespace: argocd  
+spec: 
+  # every application belongs to a single project. If unspecified, an app belongs to the "default" project
+  project: default
+  # this is the git repo that argo watches for changes
+  source: 
+    # this is Nana's git repo with her configuration files
+    repoURL: https://github.com/binnev/latte-k8s.git
+    targetRevision: HEAD
+    # we can track a specific path (directory) in a repo. This is the folder with the files you want to watch 
+    path: dev
+  # address / endpoint of the k8s API server
+  destination: 
+    # because we are running argo _inside_ the target cluster, we can specify an internal DNS name
+    server: https://kubernetes.default.svc
+    # when argocd finds the config files (in the git repo) which namespace should it look for? 
+    namespace: latte
+
+  syncPolicy: 
+    syncOptions: 
+    # this tells argo to auto-create the namespace if it doesn't exist
+    - CreateNamespace=true
+
+    # this tells argo to auto-sync the desired / actual state
+    automated: # configures argo to poll the git repo every 3 min
+      selfHeal: true  # if containers die, spin them up again
+      prune: true  # discard local changes 
