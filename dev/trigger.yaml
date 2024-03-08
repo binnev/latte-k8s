@@ -16,10 +16,9 @@ spec:
     spec: 
       containers: 
       - name: trigger
-        # This is the one I build locally using `docker build ...`. 
-        # TODO: point this at our image registry (once the latte 
-        # images are being built and pushed there)
-        image: latte-trigger  
+        # TODO: point this at our image registry (once the latte
+        #  images are being built and pushed there)
+        image: hello-world 
 
 ---
 
