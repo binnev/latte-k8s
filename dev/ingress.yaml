@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: ingress-deployment
+  labels: 
+    app: ingress
+spec: 
+  replicas: 3
+  selector: 
+    matchLabels: 
+      app: ingress
+  template: 
+    metadata: 
+      labels: 
+        app: ingress
+    spec: 
+      containers: 
+      - name: ingress
+        # TODO: point this at our image registry (once the latte
+        #  images are being built and pushed there)
+        image: testcontainers/helloworld
+
+---
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: ingress-service
+spec: 
+  selector: 
+    app: ingress
+  ports: 
+    - port: 9999
+      targetPort: 9999
